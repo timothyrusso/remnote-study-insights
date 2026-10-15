@@ -1,45 +1,25 @@
-import { declareIndexPlugin, type ReactRNPlugin, WidgetLocation } from '@remnote/plugin-sdk';
-import '../style.css';
-import '../index.css'; // import <widget-name>.css
+import { declareIndexPlugin, ReactRNPlugin, WidgetLocation } from '@remnote/plugin-sdk';
+import { collectSnapshot } from '../collect';
 
 async function onActivate(plugin: ReactRNPlugin) {
-  // Register settings
-  await plugin.settings.registerStringSetting({
-    id: 'name',
-    title: 'What is your Name?',
-    defaultValue: 'Bob',
-  });
-
-  await plugin.settings.registerBooleanSetting({
-    id: 'pizza',
-    title: 'Do you like pizza?',
-    defaultValue: true,
-  });
-
-  await plugin.settings.registerNumberSetting({
-    id: 'favorite-number',
-    title: 'What is your favorite number?',
-    defaultValue: 42,
-  });
-
-  // A command that inserts text into the editor if focused.
-  await plugin.app.registerCommand({
-    id: 'editor-command',
-    name: 'Editor Command',
-    action: async () => {
-      plugin.editor.insertPlainText('Hello World!');
-    },
-  });
-
-  // Show a toast notification to the user.
-  await plugin.app.toast("I'm a toast!");
-
-  // Register a sidebar widget.
-  await plugin.app.registerWidget('sample_widget', WidgetLocation.RightSidebar, {
+  await plugin.app.registerWidget('insights', WidgetLocation.RightSidebar, {
     dimensions: { height: 'auto', width: '100%' },
   });
+  await plugin.app.registerCommand({
+    id: 'refresh-study-insights',
+    name: 'Refresh Study Insights',
+    action: async () => {
+      try {
+        await collectSnapshot(plugin);
+        await plugin.app.toast('Study Insights refreshed.');
+      } catch (error) {
+        await plugin.app.toast(`Study Insights: ${String(error)}`);
+      }
+    },
+  });
+  // A startup snapshot also reconciles reviews synced from other devices.
+  try { await collectSnapshot(plugin); }
+  catch (error) { console.error('Study Insights startup:', error); }
 }
 
-async function onDeactivate(_: ReactRNPlugin) {}
-
-declareIndexPlugin(onActivate, onDeactivate);
+declareIndexPlugin(onActivate, async () => {});

@@ -4,3 +4,7 @@ dist
 dist-ssr
 *.local
 *.zip
+.env
+.env.*
+*.log
+*snapshot*.json

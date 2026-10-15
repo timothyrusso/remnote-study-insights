@@ -4,7 +4,7 @@ var path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
-const { ProvidePlugin, BannerPlugin } = require('webpack');
+const { ProvidePlugin, BannerPlugin, DefinePlugin } = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
@@ -60,6 +60,9 @@ const config = {
     ],
   },
   plugins: [
+    new DefinePlugin({
+      __BRIDGE_TOKEN__: JSON.stringify(process.env.REMNOTE_INSIGHTS_TOKEN || ''),
+    }),
     isDevelopment
       ? undefined
       : new MiniCssExtractPlugin({
@@ -111,6 +114,7 @@ if (isProd) {
 } else {
   // for more information, see https://webpack.js.org/configuration/dev-server
   config.devServer = {
+    host: '127.0.0.1',
     port: 8080,
     open: true,
     hot: true,

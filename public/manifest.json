@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
-  "id": "plugin_template",
-  "name": "Plugin Template",
-  "author": "remnote",
-  "repoUrl": "",
+  "id": "remnote_study_insights",
+  "name": "Study Insights",
+  "author": "timothyrusso",
+  "repoUrl": "https://github.com/timothyrusso/remnote-study-insights",
   "version": {
     "major": 0,
     "minor": 0,
@@ -11,9 +11,13 @@
   },
   "theme": [],
   "enableOnMobile": false,
-  "description": "",
+  "description": "Read-only card history diagnostics and a local assistant data bridge.",
   "requestNative": false,
   "requiredScopes": [
+    {
+      "type": "KnowledgeBaseInfo",
+      "level": "Read"
+    },
     {
       "type": "All",
       "level": "Read"
